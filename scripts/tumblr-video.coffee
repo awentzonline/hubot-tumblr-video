@@ -44,8 +44,6 @@ module.exports = (robot) ->
       embed: fullUrl,
       caption: message
     tumblrClient.video config.blogName, options, (error, response) ->
-      console.log error
-      console.log response
       if error
         res.send "Error posting #{fullUrl} to #{config.blogName}: #{error}"
       else
