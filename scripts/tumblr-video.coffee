@@ -34,12 +34,20 @@ recentlyPosted = {}  # this could be better
 
 module.exports = (robot) ->
   # includes the trailing space for neater trimming below
-  robot.hear /(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.)?youtube\.com\/watch(?:\.php)?\?.*v=)([a-zA-Z0-9\-_]+)\s*/, (res) ->
+  robot.hear /(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.)?youtube\.com\/watch(?:\.php)?\?.*v=)([a-zA-Z0-9\-_]+)[^\s]*\s*/, (res) ->
     fullUrl = res.match[0]
     videoId = res.match[1]
     if recentlyPosted[videoId]
       return
-    message = res.match.input.replace res.match[0], ""
+    # remove the url from the input
+    message = res.match.input.replace fullUrl, ""
+    message = message.trim()
+    # make sure there's a caption or tumblr gets upset
+    if !message
+      return
+    # trailing whitespace is included in the url so we dont end
+    # up with double spaces in the message
+    fullUrl = fullUrl.trim()
     options =
       embed: fullUrl,
       caption: message
@@ -47,5 +55,5 @@ module.exports = (robot) ->
       if error
         res.send "Error posting #{fullUrl} to #{config.blogName}: #{error}"
       else
-        res.send "New fart: http://turdward.tumblr.com/post/#{response.id}/"
+        res.send "Posted to #{config.blogName}"
         recentlyPosted[videoId] = new Date()
