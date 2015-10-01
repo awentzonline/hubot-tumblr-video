@@ -1,6 +1,6 @@
 {
   "name": "hubot-tumblr-video",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "author": "Adam Wentz <adam@adamwentz.com>",
   "description": "Post videos to a tumblr",
